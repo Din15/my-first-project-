@@ -1,0 +1,36 @@
+import static org.assertj.core.api.Assertions.*
+
+import com.kms.katalon.core.testobject.RequestObject
+import com.kms.katalon.core.testobject.ResponseObject
+import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import com.kms.katalon.core.webservice.verification.WSResponseManager
+
+import groovy.json.JsonSlurper
+import internal.GlobalVariable as GlobalVariable
+
+RequestObject request = WSResponseManager.getInstance().getCurrentRequest()
+
+ResponseObject response = WSResponseManager.getInstance().getCurrentResponse()
+String requestMethod = "GET"
+String endpoint = "https://naimi.kz/"
+String authHeader = ""
+
+TestObjectProperty header_ContentType = new TestObjectProperty(Content-Type, ConditionType.EQUALS, "text/html; charset=utf-8")
+
+TestObjectProperty header_Accept = new TestObjectProperty("Accept", ConditionType.EQUALS, "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,/;q=0.8")
+
+TestObjectProperty header_Authorization = new TestObjectProperty("Authorization", ConditionType.EQUALS, authHeader)
+
+not_run: TestObjectProperty header_Cookies = new TestObjectProperty("Cookie", ConditionType.EQUALS, cookies)
+
+ArrayList defaultHeader = Arrays.asList(header_ContentType, header_Accept)
+
+RequestObject ro = new RequestObject()
+ro.setRestUrl(endpoint)
+ro.setHttpHeaderProperties(defaultHeader)
+ro.setRestRequestMethod(requestMethod)
+
+ResponseObject resp = WS.sendRequest(ro)
+println(resp.getStatusCode())
+//Using Advanced Rest Client and Postman, the same HTTP GET request returns status code 200.
+//I am open to suggestions.
